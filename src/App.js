@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
+
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer} from 'react-notifications';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import Body from './include/Body';
+
+import Superadminlogin from "./pages/Superadminlogin";
+import Manageadmin from "./pages/Manageadmin";
+import Adminlogin from "./pages/Adminlogin";
+import Manageevent from "./pages/Manageevent";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  
+       <>
+          <Router>
+            <Body>
+
+             <Switch>
+              <Route exact path='/' component={Superadminlogin} />
+              <Route exact path='/mangeadmin' component={Manageadmin} />
+              <Route exact path='/adminlogin' component={Adminlogin} />
+              <Route exact path='/manageevent' component={Manageevent} />
+             </Switch>
+             <NotificationContainer/>
+            </Body>
+
+        </Router>
+       </>
+
   );
 }
 
