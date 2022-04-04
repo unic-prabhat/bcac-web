@@ -1,15 +1,17 @@
-import React, {Component} from 'react';
-import axios from 'axios';
-import { NotificationManager } from 'react-notifications';
+import React, { Component } from 'react'
+import axios from 'axios'
+import {Link} from 'react-router-dom';
+import {NotificationManager} from 'react-notifications';
+import cookie from 'react-cookies';
 
 export default class Manageevent extends Component{
-
 
     constructor(props){
 
         super(props)
         this.state={
-
+            
+            todos: [],
             loadingForm:false,
             event_name:'',
             city:'',
@@ -17,7 +19,7 @@ export default class Manageevent extends Component{
             event_time:'',
             number_of_participants:'',
             event_distance:'',
-            createdBy:'Admin'
+            createdBy:cookie.load('admindata')._id
 
 
         }
@@ -25,8 +27,24 @@ export default class Manageevent extends Component{
         this.hanleTextChange = this.hanleTextChange.bind(this)
     }
 
+
+
+    componentDidMount(){
+        axios.get(`http://localhost:5000/api/event/list/${cookie.load('admindata')._id}`)
+        .then(response=>{
+           console.log(response.data.data)
+            // this.setState({
+            //     list:response.data.data
+            // })
+
+            
+           
+           
+        })
+    }
+
     hanleTextChange(e){
-        console.log(e.target.value)
+        // console.log(e.target.value)
         this.setState({
             [e.target.name]:e.target.value
         })
@@ -72,6 +90,23 @@ handleSubmit=e=>{
 
             <>
              <div className="container">
+             <h2>EVENT LISTS</h2>
+             <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>City</th>
+                        <th>Event Date</th>
+                        <th>Start Time Of Event</th>
+                        <th>Number Of Participants</th>
+                        <th>Distance in km(/mile?)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+                 
                     <h2>ADD EVENT</h2>
                     <form onSubmit={this.handleSubmit} loading={this.state.loadingForm}>
                     <div className="form-group">

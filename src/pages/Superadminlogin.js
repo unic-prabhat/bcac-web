@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { NotificationManager } from "react-notifications";
 import axios from 'axios';
+import cookie from 'react-cookies';
 
 export default class Superadminlogin extends Component{
 
@@ -16,6 +17,13 @@ export default class Superadminlogin extends Component{
         }
 
         this.hanleTextChange = this.hanleTextChange.bind(this)
+    }
+
+
+    componentDidMount(){
+        cookie.remove('superuserdata', { path: '/' })
+        cookie.remove('superuserlogin', { path: '/' })
+        cookie.remove('superuserid', { path: '/' })
     }
 
     hanleTextChange(e){
@@ -36,21 +44,33 @@ handleSubmit=e=>{
         // console.log(this.state)
         axios.post('http://localhost:5000/api/superadmin/login',this.state)
         .then(response=>{
-            console.log(response.data.message)
+            // console.log(response)
 
-            if(response.data.message=='valid'){
+            if(response.data.response==true){
                 this.setState({
                     loadingForm:false,
                     email:'',
                     password:''
                 })
 
-                NotificationManager.success('Success');
+                cookie.remove('superuserdata', { path: '/' })
+                cookie.remove('superuserlogin', { path: '/' })
+                cookie.remove('superuserid', { path: '/' })
+
+                var expires = new Date();
+                expires.setSeconds(21600);
+                cookie.save('superuserdata', response.data.data, { path: '/', expires })
+                cookie.save('superuserid', response.data.data._id, { path: '/', expires })
+                cookie.save('superuserlogin', true, { path: '/', expires })
+
+                NotificationManager.success('Login Success');
                 this.props.history.push('/mangeadmin');
             }else{
                 this.setState({loadingForm:false})
-                NotificationManager.warning('Invalid Login Details');
+                NotificationManager.warning(response.data.data);
             }
+
+       
         })
     }
 

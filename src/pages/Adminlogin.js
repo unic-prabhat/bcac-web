@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { NotificationManager } from "react-notifications";
 import axios from 'axios';
+import cookie from 'react-cookies';
 
 export default class Superadminlogin extends Component{
 
@@ -16,6 +17,12 @@ export default class Superadminlogin extends Component{
         }
 
         this.hanleTextChange = this.hanleTextChange.bind(this)
+    }
+
+    componentDidMount(){
+        cookie.remove('admindata', { path: '/' })
+        cookie.remove('adminlogin', { path: '/' })
+        cookie.remove('adminid', { path: '/' })
     }
 
     hanleTextChange(e){
@@ -36,21 +43,33 @@ handleSubmit=e=>{
         // console.log(this.state)
         axios.post('http://localhost:5000/api/admin/login',this.state)
         .then(response=>{
-            console.log(response.data.message)
+            console.log(response)
 
-            if(response.data.message=='valid'){
+            if(response.data.response==true){
                 this.setState({
                     loadingForm:false,
                     email:'',
                     password:''
                 })
 
-                NotificationManager.success('Success');
-                // this.props.history.push('/mangeadmin');
+                cookie.remove('admindata', { path: '/' })
+                cookie.remove('adminlogin', { path: '/' })
+                cookie.remove('adminid', { path: '/' })
+
+                var expires = new Date();
+                expires.setSeconds(21600);
+                cookie.save('admindata', response.data.data, { path: '/', expires })
+                cookie.save('adminid', response.data.data._id, { path: '/', expires })
+                cookie.save('adminlogin', true, { path: '/', expires })
+
+                NotificationManager.success('Login Success');
+                this.props.history.push('/manageevent');
             }else{
                 this.setState({loadingForm:false})
-                NotificationManager.warning('Invalid Login Details');
+                NotificationManager.warning(response.data.data);
             }
+
+         
         })
     }
 

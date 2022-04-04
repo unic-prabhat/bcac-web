@@ -28,6 +28,9 @@ export default class Body extends Component{
                     <li class="nav-item">
                     <Link class="nav-link" exact to="/manageevent">Manage Events</Link>
                     </li>
+                    <li class="nav-item">
+                    <Link class="nav-link" exact to="/manageparticipant">Manage Participants</Link>
+                    </li>
                 </ul>
                 </nav>
 

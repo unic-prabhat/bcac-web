@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { NotificationManager } from "react-notifications";
 import axios from 'axios';
+import cookie from 'react-cookies';
 
 export default class Manageadmin extends Component{
 
@@ -15,12 +16,16 @@ export default class Manageadmin extends Component{
             mobile_number:'',
             username:'',
             password:'',
-            createdBy:'SuperAdmin'
+            createdBy:cookie.load('superuserdata')._id
 
 
         }
 
         this.hanleTextChange = this.hanleTextChange.bind(this)
+    }
+
+    componentDidMount(){
+        console.log(cookie.load('superuserdata'))
     }
 
     hanleTextChange(e){
@@ -63,6 +68,7 @@ handleSubmit=e=>{
         })
     }
 
+    
 
     render(){
 
@@ -71,7 +77,7 @@ handleSubmit=e=>{
 
             <>
             <div className="container">
-                    <h2>ORGANISER REGISTRATION</h2>
+                    <h2>{this.state.createdBy}ORGANISER REGISTRATION</h2>
                     <form onSubmit={this.handleSubmit} loading={this.state.loadingForm}>
                     <div className="form-group">
                         <label htmlFor="organisation_name">Name of the organisation:</label>
